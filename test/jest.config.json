@@ -1,15 +1,15 @@
 {
   "collectCoverageFrom": ["src/*.(t|j)s", "src/**/*.(t|j)s"],
-  "coverageDirectory": "../coverage",
+  "coverageDirectory": "<rootDir>/coverage",
   "coveragePathIgnorePatterns": [
     ".*\\.module\\.(t|j)s",
-    "src/(main)|(config)\\.ts"
+    "<rootDir>/src/(main)|(config)\\.ts"
   ],
   "moduleFileExtensions": ["js", "json", "ts"],
   "moduleNameMapper": {
     "^@/(.*)$": "<rootDir>/src/$1"
   },
-  "rootDir": ".",
+  "rootDir": "..",
   "testEnvironment": "node",
   "testRegex": "\\.spec\\.ts$",
   "transform": {
