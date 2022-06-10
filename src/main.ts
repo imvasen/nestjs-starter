@@ -1,7 +1,7 @@
 import { config as dotEnvConfig } from 'dotenv';
 dotEnvConfig();
 
-import { VersioningType } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 
 import { HttpFilter, HttpInterceptor, Logger } from '@/common';
@@ -12,6 +12,7 @@ async function bootstrap() {
   const logLabel = 'Nest';
   const logger = new Logger(logLabel);
   const app = await NestFactory.create(AppModule, { logger });
+  await app.useGlobalPipes(new ValidationPipe({ transform: true }));
   await app.useGlobalInterceptors(new HttpInterceptor());
   await app.useGlobalFilters(new HttpFilter());
   await app.enableVersioning({ defaultVersion: '1', type: VersioningType.URI });

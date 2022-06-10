@@ -7,6 +7,11 @@ import {
 import { Request, Response } from 'express';
 
 import { Logger } from '@/common';
+import { ENV } from '@/config';
+
+interface HttpExceptionResponse {
+  dev: unknown;
+}
 
 @Catch(HttpException)
 export class HttpFilter implements ExceptionFilter {
@@ -27,10 +32,18 @@ export class HttpFilter implements ExceptionFilter {
       message: `${request.method} ${request.url} (${status})`,
     });
 
+    const currentResponse: HttpExceptionResponse =
+      exception.getResponse() as HttpExceptionResponse;
+
+    if (ENV !== 'development') {
+      delete currentResponse.dev;
+    }
+
     response.status(status).json({
       statusCode: status,
       timestamp: new Date().toISOString(),
       path: request.url,
+      ...currentResponse,
     });
   }
 }

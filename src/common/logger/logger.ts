@@ -16,7 +16,7 @@ function createLogger() {
         format: winston.format.combine(
           winston.format.timestamp({ format: 'YYYY/MM/DDThh:mm:ss' }),
           winston.format.printf(
-            ({ level, message, context, meta, values, timestamp: time }) => {
+            ({ level, message, context, timestamp: time }) => {
               return `[ ${level.slice(
                 0,
                 4,
@@ -42,12 +42,19 @@ interface LogDetails {
   values?: { [index: string]: string };
 }
 
+interface ParseArgsOpts {
+  includeLevel?: boolean;
+}
+
 type LogFunctionArgs = [LogDetails] | [_: string, _?: string, _?: string];
 
 export class Logger {
   constructor(private context: string = '???') {}
 
-  private parseArgs(args: LogFunctionArgs): LogDetails {
+  private parseArgs(
+    args: LogFunctionArgs,
+    { includeLevel = false }: ParseArgsOpts = {},
+  ): LogDetails {
     let details: LogDetails;
     if (typeof args[0] === 'string') {
       details = {
@@ -56,48 +63,53 @@ export class Logger {
       };
     } else {
       details = args[0];
+      if (!includeLevel) {
+        delete details.level;
+      }
     }
 
     return { context: this.context, ...details };
   }
 
   public log(...args: LogFunctionArgs): void {
-    const { level = LogLevel.info, ...details } = this.parseArgs(args);
+    const { level = LogLevel.info, ...details } = this.parseArgs(args, {
+      includeLevel: true,
+    });
     logger.log({ level, ...details });
   }
 
   public error(...args: LogFunctionArgs): void {
-    const { level, ...details } = this.parseArgs(args);
+    const details = this.parseArgs(args);
     logger.error(details);
   }
 
   public warn(...args: LogFunctionArgs): void {
-    const { level, ...details } = this.parseArgs(args);
+    const details = this.parseArgs(args);
     logger.warn(details);
   }
 
   public info(...args: LogFunctionArgs): void {
-    const { level, ...details } = this.parseArgs(args);
+    const details = this.parseArgs(args);
     logger.info(details);
   }
 
   public http(...args: LogFunctionArgs): void {
-    const { level, ...details } = this.parseArgs(args);
+    const details = this.parseArgs(args);
     logger.http(details);
   }
 
   public verbose(...args: LogFunctionArgs): void {
-    const { level, ...details } = this.parseArgs(args);
+    const details = this.parseArgs(args);
     logger.verbose(details);
   }
 
   public debug(...args: LogFunctionArgs): void {
-    const { level, ...details } = this.parseArgs(args);
+    const details = this.parseArgs(args);
     logger.debug(details);
   }
 
   public silly(...args: LogFunctionArgs): void {
-    const { level, ...details } = this.parseArgs(args);
+    const details = this.parseArgs(args);
     logger.silly(details);
   }
 }
