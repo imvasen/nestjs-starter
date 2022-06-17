@@ -1,3 +1,4 @@
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
@@ -7,7 +8,6 @@ import { repoMockFactory } from 'unit/repository.mock';
 import { UsersService } from '@/auth/users';
 import { AuthService } from '@/auth/auth';
 import { User } from '@/auth/models';
-import { HttpException, HttpStatus } from '@nestjs/common';
 
 describe('AuthService', () => {
   let usersService: UsersService;

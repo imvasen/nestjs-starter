@@ -13,7 +13,7 @@ export const repoMockFactory = (entityClass, data = []) => {
     create: jest
       .fn((entity) => entity)
       .mockImplementation((v) => {
-        let newUser = new entityClass();
+        const newUser = new entityClass();
         for (const key of Object.keys(v)) {
           newUser[key] = v[key];
         }

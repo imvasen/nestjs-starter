@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
-import { Repository } from 'typeorm';
 
 import { AuthController, AuthService } from '@/auth/auth';
 import { repoMockFactory } from 'unit/repository.mock';
@@ -10,7 +9,6 @@ import { User } from '@/auth/models';
 
 describe('AuthController', () => {
   let usersService: UsersService;
-  let mockRepo: Repository<User>;
   let controller: AuthController;
 
   beforeEach(async () => {
@@ -29,7 +27,6 @@ describe('AuthController', () => {
 
     controller = module.get<AuthController>(AuthController);
     usersService = module.get<UsersService>(UsersService);
-    mockRepo = module.get<Repository<User>>(getRepositoryToken(User));
   });
 
   it('should be defined', () => {
