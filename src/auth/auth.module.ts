@@ -4,6 +4,7 @@ import { Module } from '@nestjs/common';
 
 import { AuthController, AuthService } from '@/auth/auth';
 import { JwtStrategy } from '@/auth/jwt.strategy';
+import { UsersController } from '@/auth/users';
 import { UsersService } from '@/auth/users';
 import { CommonModule } from '@/common';
 import { User } from '@/auth/models';
@@ -17,6 +18,6 @@ import { jwtOpts } from '@/config';
   ],
   exports: [TypeOrmModule],
   providers: [UsersService, AuthService, JwtStrategy],
-  controllers: [AuthController],
+  controllers: [AuthController, UsersController],
 })
 export class AuthModule {}
