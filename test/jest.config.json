@@ -3,11 +3,14 @@
   "coverageDirectory": "<rootDir>/coverage",
   "coveragePathIgnorePatterns": [
     ".*\\.module\\.(t|j)s",
-    "<rootDir>/src/(main)|(config)\\.ts"
+    "<rootDir>/src/(main)|(config)\\.ts",
+    "<rootDir>/src/common/http\\.(filter)|(interceptor)\\.ts",
+    "index.ts"
   ],
   "moduleFileExtensions": ["js", "json", "ts"],
   "moduleNameMapper": {
-    "^@/(.*)$": "<rootDir>/src/$1"
+    "^@/(.*)$": "<rootDir>/src/$1",
+    "^unit/(.*)$": "<rootDir>/test/unit/$1"
   },
   "rootDir": "..",
   "testEnvironment": "node",

@@ -13,13 +13,17 @@ export class UsersService {
 
   async createUser(userSkeleton: Partial<User>) {
     const user = this.repository.create(userSkeleton);
-    await this.repository.insert(user).then((res) => {
+    return await this.repository.insert(user).then(() => {
       this.logger.info(`User created: ${user.email}`);
-      return res;
+      return user;
     });
   }
 
   getUser(userSkeleton: Partial<User>) {
     return this.repository.findOne(userSkeleton);
+  }
+
+  getUsers(filter: Partial<User> = {}) {
+    return this.repository.find(filter);
   }
 }

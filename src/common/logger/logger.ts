@@ -32,7 +32,7 @@ function createLogger() {
   return newLogger;
 }
 
-const logger = createLogger();
+export const _logger = createLogger();
 
 interface LogDetails {
   message: string;
@@ -46,7 +46,9 @@ interface ParseArgsOpts {
   includeLevel?: boolean;
 }
 
-type LogFunctionArgs = [LogDetails] | [_: string, _?: string, _?: string];
+type LogFunctionArgs =
+  | [LogDetails]
+  | [message: string, _?: string, context?: string];
 
 export class Logger {
   constructor(private context: string = '???') {}
@@ -75,41 +77,41 @@ export class Logger {
     const { level = LogLevel.info, ...details } = this.parseArgs(args, {
       includeLevel: true,
     });
-    logger.log({ level, ...details });
+    _logger.log({ level, ...details });
   }
 
   public error(...args: LogFunctionArgs): void {
     const details = this.parseArgs(args);
-    logger.error(details);
+    _logger.error(details);
   }
 
   public warn(...args: LogFunctionArgs): void {
     const details = this.parseArgs(args);
-    logger.warn(details);
+    _logger.warn(details);
   }
 
   public info(...args: LogFunctionArgs): void {
     const details = this.parseArgs(args);
-    logger.info(details);
+    _logger.info(details);
   }
 
   public http(...args: LogFunctionArgs): void {
     const details = this.parseArgs(args);
-    logger.http(details);
+    _logger.http(details);
   }
 
   public verbose(...args: LogFunctionArgs): void {
     const details = this.parseArgs(args);
-    logger.verbose(details);
+    _logger.verbose(details);
   }
 
   public debug(...args: LogFunctionArgs): void {
     const details = this.parseArgs(args);
-    logger.debug(details);
+    _logger.debug(details);
   }
 
   public silly(...args: LogFunctionArgs): void {
     const details = this.parseArgs(args);
-    logger.silly(details);
+    _logger.silly(details);
   }
 }
