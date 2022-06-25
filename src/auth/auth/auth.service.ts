@@ -5,6 +5,12 @@ import { UsersService } from '@/auth/users';
 import { JwtService } from '@nestjs/jwt';
 import { Logger } from '@/common';
 
+export interface JwtPayload {
+  sub: string;
+  iat: number;
+  email: string;
+}
+
 export class SignUpDto {
   @IsEmail()
   email: string;
@@ -63,7 +69,7 @@ export class AuthService {
       );
     }
 
-    const payload = { email };
+    const payload: Pick<JwtPayload, 'email'> = { email };
 
     return { jwt: this.jwt.sign(payload, { subject: `${user.id}` }) };
   }
