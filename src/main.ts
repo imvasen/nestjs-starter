@@ -15,6 +15,7 @@ async function bootstrap() {
   await app.useGlobalPipes(new ValidationPipe({ transform: true }));
   await app.useGlobalInterceptors(new HttpInterceptor());
   await app.useGlobalFilters(new HttpFilter());
+  await app.enableCors();
   await app.enableVersioning({ defaultVersion: '1', type: VersioningType.URI });
   await app.setGlobalPrefix('api');
   await app.listen(config.PORT);
