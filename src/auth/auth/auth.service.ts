@@ -8,7 +8,9 @@ import { Logger } from '@/common';
 export interface JwtPayload {
   sub: string;
   iat: number;
+  id: string;
   email: string;
+  name: string;
 }
 
 export class SignUpDto {
@@ -69,7 +71,13 @@ export class AuthService {
       );
     }
 
-    const payload: Pick<JwtPayload, 'email'> = { email };
+    const { id, name } = user;
+
+    const payload: Omit<JwtPayload, 'sub' | 'iat'> = {
+      id,
+      email,
+      name,
+    };
 
     return { jwt: this.jwt.sign(payload, { subject: `${user.id}` }) };
   }

@@ -4,12 +4,15 @@ import * as bcrypt from 'bcrypt';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: string;
 
   @Column({ type: 'varchar', unique: true })
   email: string;
 
-  @Column()
+  @Column({ type: 'varchar', default: '' })
+  name: string;
+
+  @Column({ type: 'varchar' })
   password: string;
 
   validatePassword(password: string): Promise<boolean> {
