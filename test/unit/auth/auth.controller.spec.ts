@@ -35,7 +35,7 @@ describe('AuthController', () => {
 
   it('should return the jwt from the newly created user', async () => {
     const user = new User();
-    user.id = 1;
+    user.id = '1';
     user.email = 'test@test.com';
     user.password = 'Mocked';
     await user.beforeInsert();
@@ -50,7 +50,7 @@ describe('AuthController', () => {
 
   it('should return the jwt from the user signing in', async () => {
     const user = new User();
-    user.id = 1;
+    user.id = '1';
     user.email = 'test@test.com';
     user.password = 'Mocked';
     await user.beforeInsert();
@@ -65,7 +65,7 @@ describe('AuthController', () => {
 
   it('should return the jwt from the user newly created', async () => {
     const user = new User();
-    user.id = 1;
+    user.id = '1';
     user.email = 'test@test.com';
     user.password = 'Mocked';
     await user.beforeInsert();

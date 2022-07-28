@@ -43,7 +43,7 @@ describe('UsersController', () => {
 
   it('should get profile of signed user', async () => {
     const user = new User();
-    user.id = 1;
+    user.id = '1';
     user.email = 'test@test.com';
     user.password = 'Mocked';
     await user.beforeInsert();

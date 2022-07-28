@@ -80,7 +80,7 @@ describe('AuthService', () => {
 
   it('should throw HttpException (FORBIDDEN) when wrong user/password', async () => {
     const user = new User();
-    user.id = 1;
+    user.id = '1';
     user.email = 'test@test.com';
     user.password = 'Mocked';
     await user.beforeInsert();
@@ -106,7 +106,7 @@ describe('AuthService', () => {
 
   it('should return a JWT if correct user & password', async () => {
     const user = new User();
-    user.id = 1;
+    user.id = '1';
     user.email = 'test@test.com';
     user.password = 'Mocked';
     await user.beforeInsert();
