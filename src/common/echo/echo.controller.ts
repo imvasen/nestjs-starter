@@ -1,4 +1,4 @@
-import { Controller, Get, Req } from '@nestjs/common';
+import { Controller, Get, Query, Req } from '@nestjs/common';
 import { Request } from 'express';
 
 import { EchoService } from '@/common/echo/echo.service';
@@ -8,12 +8,20 @@ export class EchoController {
   constructor(private echo: EchoService) {}
 
   @Get('ip')
-  ip(@Req() req: Request) {
-    return this.echo.getIpInfo(req);
+  ip(@Req() { headers, socket }: Request, @Query('ip') ip?: string) {
+    if (!ip) {
+      ip = (headers['x-forwarded-for'] || socket.remoteAddress) as string;
+    }
+
+    return this.echo.getIpInfo(ip);
   }
 
   @Get('location')
-  location(@Req() req: Request) {
-    return this.echo.getGeoLocation(req);
+  location(@Req() { headers, socket }: Request, @Query('ip') ip: string) {
+    if (!ip) {
+      ip = (headers['x-forwarded-for'] || socket.remoteAddress) as string;
+    }
+
+    return this.echo.getGeoLocationFromIp(ip);
   }
 }

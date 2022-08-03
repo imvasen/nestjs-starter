@@ -1,7 +1,12 @@
+import { InjectRepository } from '@nestjs/typeorm';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
-import { Request } from 'express';
+import { Repository } from 'typeorm';
+
+import { IpGeoLocation, IPVersion } from '@/common/models';
+import { PlacesService } from '@/common/places';
+import { Logger } from '@/common/logger';
 
 const GEO_LOCATION_API_URL = 'https://api.geoapify.com/v1/ipinfo';
 const GEO_LOCATION_API_KEY = process.env.GEO_LOCATION_API_KEY;
@@ -31,30 +36,88 @@ export interface GeoLocationResponse {
 
 @Injectable()
 export class EchoService {
-  constructor(private http: HttpService) {}
+  private logger = new Logger('EchoService');
+
+  constructor(
+    private http: HttpService,
+    private places: PlacesService,
+    @InjectRepository(IpGeoLocation)
+    private ipGeoService: Repository<IpGeoLocation>,
+  ) {}
 
   /**
    * Gets the IP from the request.
    * @params req HttpRequest.
    * @returns IP info object.
    */
-  getIpInfo(req: Request) {
-    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    return { ip, version: ip.includes(':') ? 'v6' : 'v4' };
+  getIpInfo(ip: string) {
+    const version = ip.includes(':') ? IPVersion.v6 : IPVersion.v4;
+
+    let prefixOrBlock: string;
+    if (version === IPVersion.v4) {
+      const pieces = ip.split('.');
+      prefixOrBlock = `${pieces.slice(0, 3).join('.')}.0`;
+    } else {
+      const pieces = ip.split(':');
+      prefixOrBlock = `${pieces.slice(0, 3).join(':')}::`;
+    }
+
+    return { ip, version, prefixOrBlock };
+  }
+
+  public async getOrCreateIpGeoLocation(ipInfo: Partial<IpGeoLocation>) {
+    const { prefixOrBlock } = ipInfo;
+    let ipGeoLocation = await this.ipGeoService.findOne({ prefixOrBlock });
+
+    if (!ipGeoLocation) {
+      this.logger.verbose(`IP [${ipInfo.prefixOrBlock}] not found in DB`);
+      const ipLocation = await lastValueFrom(
+        this.http.get<GeoLocationResponse>(`${GEO_LOCATION_API_URL}`, {
+          params: { ip: ipInfo.prefixOrBlock, apiKey: GEO_LOCATION_API_KEY },
+        }),
+      ).then(({ data }) => data);
+      const location = await this.places.findCity(
+        { name: ipLocation.city.name },
+        { name: ipLocation.state.name },
+        { isoAlpha2: ipLocation.country.iso_code },
+      );
+
+      const {
+        city: { name: cityName },
+        state: { name: stateName },
+        country: { iso_code: countryCode },
+      } = ipLocation;
+
+      if (!location.country || !location.state || !location.city) {
+        const notFound = !location.country
+          ? 'Country'
+          : !location.state
+          ? 'State'
+          : 'City';
+        this.logger.warn(
+          `${notFound} not found: [city:` +
+            `${cityName},state:${stateName},country:${countryCode}]`,
+        );
+      }
+
+      ipGeoLocation = await this.ipGeoService.create({
+        ...ipInfo,
+        ...location,
+      });
+      await this.ipGeoService.save(ipGeoLocation);
+      this.logger.verbose(`IP [${ipInfo.prefixOrBlock}] saved in DB`);
+    }
+
+    return ipGeoLocation;
   }
 
   /**
    * Gets GeoLocation based on IP.
-   * @param req HttpRequest.
+   * @param ip IP Address to get location.
    * @returns GeoLocation of the IP.
    */
-  async getGeoLocation(req: Request) {
-    const ipInfo = this.getIpInfo(req);
-
-    return lastValueFrom(
-      this.http.get<GeoLocationResponse>(`${GEO_LOCATION_API_URL}`, {
-        params: { ip: ipInfo.ip, apiKey: GEO_LOCATION_API_KEY },
-      }),
-    ).then(({ data }) => data);
+  async getGeoLocationFromIp(ip: string) {
+    const ipInfo = this.getIpInfo(ip);
+    return await this.getOrCreateIpGeoLocation(ipInfo);
   }
 }
