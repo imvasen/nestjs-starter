@@ -1,20 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { HttpModule } from '@nestjs/axios';
 
-import { City, Country, IpGeoLocation, State, Timezone } from '@/common/models';
-import { EchoController, EchoService } from '@/common/echo';
+import { City, Country, State, Timezone } from '@/common/models';
+import { PlacesService } from '@/common/places/places.service';
 import { repoMockFactory } from 'unit/repository.mock';
-import { PlacesService } from '@/common/places';
 
-describe('EchoController', () => {
-  let controller: EchoController;
+describe('PlacesService', () => {
+  let service: PlacesService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [EchoController],
       providers: [
-        EchoService,
         PlacesService,
         {
           provide: getRepositoryToken(City),
@@ -32,18 +28,13 @@ describe('EchoController', () => {
           provide: getRepositoryToken(Timezone),
           useFactory: repoMockFactory(Timezone),
         },
-        {
-          provide: getRepositoryToken(IpGeoLocation),
-          useFactory: repoMockFactory(IpGeoLocation),
-        },
       ],
-      imports: [HttpModule],
     }).compile();
 
-    controller = module.get<EchoController>(EchoController);
+    service = module.get<PlacesService>(PlacesService);
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(service).toBeDefined();
   });
 });
