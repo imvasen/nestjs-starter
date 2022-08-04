@@ -57,6 +57,8 @@ export class EchoService {
     if (version === IPVersion.v4) {
       const pieces = ip.split('.');
       prefixOrBlock = `${pieces.slice(0, 3).join('.')}.0`;
+    } else if (ip === '::1') {
+      prefixOrBlock = '::1';
     } else {
       const pieces = ip.split(':');
       prefixOrBlock = `${pieces.slice(0, 3).join(':')}::`;
@@ -76,10 +78,16 @@ export class EchoService {
           params: { ip: ipInfo.prefixOrBlock, apiKey: GEO_LOCATION_API_KEY },
         }),
       ).then(({ data }) => data);
+
+      if (!ipLocation.country) {
+        this.logger.verbose('IP location cannot be found');
+        return ipInfo;
+      }
+
       const location = await this.places.findCity(
-        { name: ipLocation.city.name },
-        { name: ipLocation.state.name },
-        { isoAlpha2: ipLocation.country.iso_code },
+        { name: ipLocation.city?.name },
+        { name: ipLocation.state?.name },
+        { isoAlpha2: ipLocation?.country.iso_code },
       );
 
       const {
