@@ -18,6 +18,7 @@ export enum IPVersion {
 
 @Entity({ name: 'ip_geo_location' })
 export class IpGeoLocation {
+  @Exclude()
   @PrimaryGeneratedColumn()
   id: string;
 
@@ -47,10 +48,7 @@ export class IpGeoLocation {
 
   @Expose()
   get location() {
-    return {
-      country: this.country?.name,
-      state: this.state?.name,
-      city: this.city?.name,
-    };
+    const { country, state, city } = this;
+    return { country, state, city };
   }
 }

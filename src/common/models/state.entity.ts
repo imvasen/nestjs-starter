@@ -1,3 +1,4 @@
+import { Expose, Transform } from 'class-transformer';
 import {
   Entity,
   Column,
@@ -30,6 +31,8 @@ export class State {
   @Column({ nullable: true })
   latitude?: string;
 
+  @Expose({ name: 'countryId' })
+  @Transform(({ value }) => value.id)
   @ManyToOne(() => Country, { eager: true })
   @JoinColumn({ name: 'country_id', referencedColumnName: 'id' })
   country: Country;
