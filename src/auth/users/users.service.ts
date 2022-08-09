@@ -19,11 +19,7 @@ export class UsersService {
     });
   }
 
-  getUser(userSkeleton: Partial<User>) {
-    return this.repository.findOne(userSkeleton);
-  }
-
-  getUsers(filter: Partial<User> = {}) {
-    return this.repository.find(filter);
+  getUser({ id, email }: Partial<User>) {
+    return this.repository.findOne({ where: { id, email } });
   }
 }

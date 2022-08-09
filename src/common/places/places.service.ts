@@ -23,15 +23,19 @@ export class PlacesService {
     maxTries = 5,
   ) {
     if ('isoAlpha2' in entity) {
-      const dbEntity = await service.findOne({ isoAlpha2: entity.isoAlpha2 });
+      const dbEntity = await service.findOne({
+        where: { isoAlpha2: entity.isoAlpha2 },
+      });
       return dbEntity;
     }
 
     let name = entity.name;
     for (let i = 0; i < maxTries; i++) {
       const dbEntities = await service.find({
-        ...entity,
-        name: Like(`${name}%`),
+        where: {
+          ...entity,
+          name: Like(`${name}%`),
+        },
       });
 
       if (dbEntities.length === 1) {
@@ -86,7 +90,7 @@ export class PlacesService {
 
   public async getOrCreateTimezone(timezone: Partial<Timezone>) {
     const { name } = timezone;
-    let dbTimezone = await this.timezones.findOne({ name });
+    let dbTimezone = await this.timezones.findOne({ where: { name } });
 
     if (!dbTimezone) {
       dbTimezone = await this.timezones.create(timezone);

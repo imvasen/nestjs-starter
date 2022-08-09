@@ -38,10 +38,10 @@ describe('AuthService', () => {
 
   it('should create user', async () => {
     const user = { email: 'test@test.com', password: 'mocked' };
-    const usersBeforeCreation = (await usersService.getUsers()).length;
+    const usersBeforeCreation = (await mockRepo.find({})).length;
 
     await service.createUser(user);
-    const usersAfterCreation = (await usersService.getUsers()).length;
+    const usersAfterCreation = (await mockRepo.find({})).length;
 
     expect(usersBeforeCreation).toBe(usersAfterCreation - 1);
   });

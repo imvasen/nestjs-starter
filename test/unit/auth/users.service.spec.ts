@@ -33,14 +33,14 @@ describe('UsersService', () => {
     const user = { email: 'test@test.com', password: 'mocked' };
     const createSpyOn = jest.spyOn(mockRepo, 'create');
     const insertSpyOn = jest.spyOn(mockRepo, 'insert');
-    const usersBeforeCreation = (await service.getUsers()).length;
+    const usersBeforeCreation = (await mockRepo.find({})).length;
 
     await service.createUser(user);
 
     expect(createSpyOn).toHaveBeenCalledTimes(1);
     expect(insertSpyOn).toHaveBeenCalledTimes(1);
 
-    const usersAfterCreation = (await service.getUsers()).length;
+    const usersAfterCreation = (await mockRepo.find({})).length;
 
     expect(usersBeforeCreation).toBe(usersAfterCreation - 1);
   });

@@ -69,7 +69,9 @@ export class EchoService {
 
   public async getOrCreateIpGeoLocation(ipInfo: Partial<IpGeoLocation>) {
     const { prefixOrBlock } = ipInfo;
-    let ipGeoLocation = await this.ipGeoService.findOne({ prefixOrBlock });
+    let ipGeoLocation = await this.ipGeoService.findOne({
+      where: { prefixOrBlock },
+    });
 
     if (!ipGeoLocation) {
       this.logger.verbose(`IP [${ipInfo.prefixOrBlock}] not found in DB`);
