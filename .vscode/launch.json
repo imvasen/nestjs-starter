@@ -4,7 +4,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "SxBk Debug",
+            "name": "NestJS Debug",
             "runtimeArgs": [
                 "--nolazy",
                 "-r",
