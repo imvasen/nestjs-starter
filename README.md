@@ -29,7 +29,7 @@
 ## Installation
 
 ```bash
-$ npm install
+$ pnpm install
 ```
 
 ## Running the app
@@ -53,13 +53,13 @@ POSTGRES_PORT=5432
 
 ```bash
 # development
-$ npm run start
+$ pnpm run start
 
 # watch mode
-$ npm run start:dev
+$ pnpm run start:dev
 
 # production mode
-$ npm run start:prod
+$ pnpm run start:prod
 ```
 
 ## Test
@@ -70,13 +70,13 @@ E2E testing.
 
 ```bash
 # unit tests
-$ npm run test
+$ pnpm run test
 
 # e2e tests
-$ npm run test:e2e
+$ pnpm run test:e2e
 
 # test coverage
-$ npm run test:cov
+$ pnpm run test:cov
 ```
 
 ## Support
