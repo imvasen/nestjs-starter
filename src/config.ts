@@ -14,5 +14,7 @@ export const jwtOpts: JwtModuleOptions = { secret };
 
 export const ENV: string = (() => {
   const env: string = process.env.NODE_ENV;
-  return ['development', 'production'].includes(env) ? env : 'development';
+  return ['test', 'development', 'production'].includes(env)
+    ? env
+    : 'development';
 })();

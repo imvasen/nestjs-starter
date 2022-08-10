@@ -8,9 +8,10 @@ function createLogger() {
     level: config.LOG_LEVEL,
     format: winston.format.json(),
     transports: [],
+    silent: config.NODE_ENV === 'test',
   });
 
-  if (config.NODE_ENV !== 'production') {
+  if (config.NODE_ENV === 'development') {
     newLogger.add(
       new winston.transports.Console({
         format: winston.format.combine(
