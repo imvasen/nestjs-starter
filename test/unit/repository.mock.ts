@@ -23,6 +23,7 @@ export const repoMockFactory = (entityClass, data = []) => {
     insert: jest
       .fn((entity) => entity)
       .mockImplementation(async (v) => data.push(v)),
+    save: jest.fn((entity) => entity).mockImplementation(async () => null),
   }));
 
   return mockRepo;

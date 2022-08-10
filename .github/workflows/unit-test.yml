@@ -9,8 +9,10 @@ on:
   pull_request:
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
+    env:
+      GEO_LOCATION_API_KEY: ${{ secrets.GEO_LOCATION_API_KEY }}
 
     strategy:
       matrix:
