@@ -4,8 +4,8 @@ import { HttpModule } from '@nestjs/axios';
 
 import { City, Country, State, Timezone, IpGeoLocation } from '@/common/models';
 import { EchoController, EchoService } from '@/common/echo';
-import { cache, typeorm } from '@/common/config';
 import { PlacesService } from '@/common/places';
+import { cache, typeorm } from '@/config';
 
 @Module({
   imports: [

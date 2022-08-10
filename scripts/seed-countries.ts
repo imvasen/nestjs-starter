@@ -8,6 +8,7 @@ import axios from 'axios';
 
 import { City, Country, State } from '@/common/models';
 import { Logger, PlacesService } from '@/common';
+import { normalizeString } from '@/utils';
 import { AppModule } from '@/app.module';
 
 const countryRepoUrl = process.env.COUNTRY_REPO_URL;
@@ -66,30 +67,30 @@ async function retrieveCountriesFromRepository() {
     .get<PlacesRepoCountry[]>(countryRepoUrl)
     .then(({ data: countries }) =>
       countries.map((country) => ({
-        name: country.name,
+        name: normalizeString(country.name),
         isoAlpha3: country.iso3,
         isoAlpha2: country.iso2,
         isoNumeric: country.numeric_code,
         nameNative: country.native,
         phoneCode: country.phone_code,
-        capital: country.capital,
+        capital: normalizeString(country.capital),
         currency: country.currency,
-        currencyName: country.currency_name,
+        currencyName: normalizeString(country.currency_name),
         currencySymbol: country.currency_symbol,
         flag: country.emoji,
-        region: country.region,
-        subregion: country.subregion,
+        region: normalizeString(country.region),
+        subregion: normalizeString(country.subregion),
         longitude: country.longitude,
         latitude: country.latitude,
         timezones: country.timezones,
         states: country.states.map((state) => ({
-          name: state.name,
+          name: normalizeString(state.name),
           code: state.state_code,
           type: state.type,
           longitude: state.longitude,
           latitude: state.latitude,
           cities: state.cities.map((city) => ({
-            name: city.name,
+            name: normalizeString(city.name),
             longitude: city.longitude,
             latitude: city.latitude,
           })),

@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
+  CreateDateColumn,
 } from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
 
@@ -22,10 +23,14 @@ export class IpGeoLocation {
   @PrimaryGeneratedColumn()
   id: string;
 
+  @Exclude()
+  @CreateDateColumn({ name: 'registration_date' })
+  registrationDate: Date;
+
   /**
    * For IPv6 using FFFF:FFFF:FFFF:: "mask", for IPv4 using 255.255.255.0.
    */
-  @Column({ type: 'varchar', unique: true })
+  @Column({ name: 'prefix', type: 'varchar', unique: true })
   prefixOrBlock: string;
 
   @Column({ name: 'ip_version', type: 'varchar', enum: IPVersion })

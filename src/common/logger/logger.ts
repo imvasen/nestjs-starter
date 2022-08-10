@@ -1,11 +1,24 @@
 import * as winston from 'winston';
 
-import * as config from '@/common/config';
-import { LogLevel } from '@/common/config';
+import * as config from '@/config';
+
+export enum LogLevel {
+  error = 'error',
+  warn = 'warn',
+  info = 'info',
+  http = 'http',
+  verbose = 'verbose',
+  debug = 'debug',
+}
+
+function getLogLevel(): LogLevel {
+  const logLevel = config.LOG_LEVEL as LogLevel;
+  return Object.values(LogLevel).includes(logLevel) ? logLevel : LogLevel.info;
+}
 
 function createLogger() {
   const newLogger = winston.createLogger({
-    level: config.LOG_LEVEL,
+    level: getLogLevel(),
     format: winston.format.json(),
     transports: [],
     silent: config.NODE_ENV === 'test',

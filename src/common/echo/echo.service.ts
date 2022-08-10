@@ -4,12 +4,11 @@ import { Injectable } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
 import { Repository } from 'typeorm';
 
+import { GEO_LOCATION_API_URL, GEO_LOCATION_API_KEY } from '@/config';
 import { IpGeoLocation, IPVersion } from '@/common/models';
 import { PlacesService } from '@/common/places';
 import { Logger } from '@/common/logger';
-
-const GEO_LOCATION_API_URL = 'https://api.geoapify.com/v1/ipinfo';
-const GEO_LOCATION_API_KEY = process.env.GEO_LOCATION_API_KEY;
+import { normalizeString } from '@/utils';
 
 export interface GeoLocationResponse {
   country: {
@@ -87,8 +86,16 @@ export class EchoService {
       }
 
       const location = await this.places.findCity(
-        { name: ipLocation.city?.name },
-        { name: ipLocation.state?.name },
+        {
+          name: ipLocation.city?.name
+            ? normalizeString(ipLocation.city.name)
+            : undefined,
+        },
+        {
+          name: ipLocation.state?.name
+            ? normalizeString(ipLocation.state.name)
+            : undefined,
+        },
         { isoAlpha2: ipLocation?.country.iso_code },
       );
 
